@@ -7,8 +7,8 @@ python-versions = "*"
 version = "1.0.1"
 
 [metadata]
-content-hash = "7f84357e605fee33040a45e5576138d81f21c46f4fe2f1cfba0f982b9202cc7b"
-python-versions = "*"
+content-hash = "c7bb684b0f9e5ba499ef0802f8869ff82637006255dd81687e2a62212076e909"
+python-versions = "^3.7"
 
 [metadata.hashes]
 ripgrepy = ["0104bf9202146264c73c72c5e0c6a7f241eeea68934268d43ef5fd540331a7ea", "040ea70427f1567ddffe4ba5f7e3e6d492a02b54aea4306022f166336ea0b60e"]
