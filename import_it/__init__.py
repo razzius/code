@@ -10,6 +10,12 @@ def trim_prefix(s, prefix):
     return s
 
 
+def trim_suffix(s, suffix):
+    if s.endswith(suffix):
+        return s[: -len(suffix)]
+    return s
+
+
 def try_to_match_on_existing_import(symbol, repository):
     search = rf'import \b{symbol}\b'
     result = Ripgrepy(search, repository).json().run().as_dict
@@ -40,11 +46,11 @@ def main():
     else:
         absolute_path = result[0]['data']['path']['text']
 
-        relative_path = trim_prefix(absolute_path, repository)
+        relative_path = trim_prefix(absolute_path, f'{repository}/')
 
-        import_path = (
-            trim_prefix(relative_path, '/').replace('.py', '').replace('/', '.')
-        )
+        filename_no_extension = trim_suffix(relative_path, '.py')
+
+        import_path = trim_suffix(filename_no_extension, '/__init__').replace('/', '.')
 
         import_source = f'from {import_path} import {symbol}'
 
