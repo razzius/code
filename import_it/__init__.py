@@ -5,22 +5,13 @@ import logging
 import re
 from ripgrepy import Ripgrepy
 
+from .utils import trim_prefix, trim_suffix
+
+
 loglevel = os.getenv('LOGLEVEL', 'WARNING').upper()
 logging.basicConfig(level=getattr(logging, loglevel))
 
 logger = logging.getLogger(__file__)
-
-
-def trim_prefix(s, prefix):
-    if s.startswith(prefix):
-        return s[len(prefix) :]
-    return s
-
-
-def trim_suffix(s, suffix):
-    if s.endswith(suffix):
-        return s[: -len(suffix)]
-    return s
 
 
 def try_to_match_on_existing_import(symbol, repository):
@@ -34,7 +25,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('symbol')
     parser.add_argument('repository')
-    parser.add_argument('filepath')
+    parser.add_argument('filepath', nargs='?', default='')
     args = parser.parse_args()
 
     symbol = args.symbol
@@ -46,7 +37,7 @@ def main():
     elif symbol[0].isupper():
         search = rf'class {symbol}\('
     else:
-        search = f'def {symbol}'
+        search = rf'def {symbol}\b'
 
     logger.info(f'Running ripgrep with search {search}')
     result = Ripgrepy(search, repository).json().run().as_dict
