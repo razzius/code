@@ -5,7 +5,8 @@ import logging
 import re
 from ripgrepy import Ripgrepy
 
-logging.basicConfig(level=os.getenv('LOGLEVEL', 'WARNING'))
+loglevel = os.getenv('LOGLEVEL', 'WARNING').upper()
+logging.basicConfig(level=getattr(logging, loglevel))
 
 logger = logging.getLogger(__file__)
 
