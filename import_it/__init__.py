@@ -1,7 +1,13 @@
 #!/usr/bin/env python3.7
+import os
 import argparse
+import logging
 import re
 from ripgrepy import Ripgrepy
+
+logging.basicConfig(level=os.getenv('LOGLEVEL', 'WARNING'))
+
+logger = logging.getLogger(__file__)
 
 
 def trim_prefix(s, prefix):
@@ -27,26 +33,38 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('symbol')
     parser.add_argument('repository')
+    parser.add_argument('filepath')
     args = parser.parse_args()
 
     symbol = args.symbol
     repository = args.repository
+    filepath = args.filepath
 
     if re.fullmatch('[A-Z_]+', symbol):
         search = rf'{symbol}\s=\s'
     elif symbol[0].isupper():
-        search = f'class {symbol}'
+        search = rf'class {symbol}\('
     else:
         search = f'def {symbol}'
 
+    logger.info(f'Running ripgrep with search {search}')
     result = Ripgrepy(search, repository).json().run().as_dict
 
     if not result:
+        logger.info('Trying to match on existing import')
         import_source = try_to_match_on_existing_import(symbol, repository)
     else:
         absolute_path = result[0]['data']['path']['text']
 
-        relative_path = trim_prefix(absolute_path, f'{repository}/')
+        filepath_parts = filepath.split('/')
+        absolute_path_parts = absolute_path.split('/')
+
+        if filepath_parts[:-1] == absolute_path_parts[:-1]:
+            logger.info('Will do relative path')
+
+            relative_path = f'.{absolute_path_parts[-1]}'
+        else:
+            relative_path = trim_prefix(absolute_path, f'{repository}/')
 
         filename_no_extension = trim_suffix(relative_path, '.py')
 
