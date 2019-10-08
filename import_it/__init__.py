@@ -33,7 +33,7 @@ def main():
     filepath = args.filepath
 
     if re.fullmatch('[A-Z_]+', symbol):
-        search = rf'{symbol}\s=\s'
+        search = rf'^{symbol}\s=\s'
     elif symbol[0].isupper():
         search = rf'class {symbol}\('
     else:
