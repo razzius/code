@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "import_it"
-version = "0.2.1"
+version = "0.3.0"
 description = "Determine the way to import a symbol using rg."
 authors = ["Razzi Abuissa <razzi@abuissa.net>"]
 
