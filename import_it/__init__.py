@@ -15,7 +15,7 @@ logger = logging.getLogger(__file__)
 
 
 def try_to_match_on_existing_import(symbol, repository):
-    search = rf'import \b{symbol}\b'
+    search = rf'import.*\b{symbol}\b'
     result = Ripgrepy(search, repository).json().run().as_dict
     import_source = result[0]['data']['lines']['text'].rstrip()
     return import_source
